@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Réservation</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="mes-styles.css">
+    <link rel="stylesheet" href="les-styles.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+
+<!-- menu -->
+<header>
+    <div class="logo_link">
+        <a href="#" class="logo">COYOKY</a>
+        <div class="menu_link">
+            <a href="index.html">Accueil</a>
+            <a href="kyllian.phaeton@gmail.com">Contactez-nous</a>
+        </div>
+    </div>
+
+    <!-- responsive menu -->
+    <div class="sidebar" id="mySidebar">
+        <div class="closebtn" onclick="closeNav()">
+            <img src="images/close.png">
+        </div>
+        <a href="index.html">Accueil</a>
+        <a href="kyllian.phaeton@gmail.com">Contactez-nous</a>
+    </div>
+
+    <div id="main">
+        <button class="openbtn" onclick="openNav()">
+            <img src="images/menu.png">
+            Menu
+        </button>
+    </div>
+    <!-- responsive menu -->
+
+</header>
+<!-- menu -->
+
+<div class="calque">
+    Réservation
+</div>
+
+<div id="conteneur">
+    <div id="contenu">
+        <div id="auCentre">
+            <div style="width:600px;margin:auto;">
+                <form id="reservation-form" onsubmit="submitReservation(event)">
+                    <div style="float:left;width:200px;">Date d'arrivée :</div>
+                    <div style="float:left;width:399px;">
+                        <input type="text" id="dated" name="arrival" onchange="ordre('dated');" readonly>
+                    </div>
+                    <br><br>
+                    <div style="float:left;width:200px;">Date de départ :</div>
+                    <div style="float:left;width:399px;">
+                        <input type="text" id="datef" name="departure" onchange="ordre('datef');" readonly>
+                    </div>
+                    <br><br>
+                    <div style="float:left;width:200px;">Email :</div>
+                    <div style="float:left;width:399px;">
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <br><br>
+                    <div style="float:left;width:200px;"></div>
+                    <div style="float:left;width:399px;">
+                        <button type="submit">Réserver</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+    $("#dated").datepicker({
+        dateFormat: "mm/dd/yy",
+        minDate: 0,
+        onSelect: function(selectedDate) {
+            $("#datef").datepicker("option", "minDate", selectedDate);
+        }
+    });
+    $("#datef").datepicker({
+        dateFormat: "mm/dd/yy",
+        minDate: 1,
+        onSelect: function(selectedDate) {
+            $("#dated").datepicker("option", "maxDate", selectedDate);
+        }
+    });
+});
+
+function submitReservation(event) {
+    event.preventDefault();
+    const arrivalDate = document.getElementById('dated').value;
+    const departureDate = document.getElementById('datef').value;
+    const email = document.getElementById('email').value;
+
+    if (!arrivalDate || !departureDate) {
+        alert("Veuillez sélectionner les deux dates.");
+        return;
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/reserve",
+        data: {
+            arrival: arrivalDate,
+            departure: departureDate,
+            email: email
+        },
+        success: function(response) {
+            alert(`Réservation confirmée! Date d'arrivée: ${arrivalDate} Date de départ: ${departureDate}`);
+        },
+        error: function(error) {
+            alert("Une erreur s'est produite lors de la réservation. Veuillez réessayer.");
+        }
+    });
+}
+</script>
+
+</body>
+</html>
