@@ -44,7 +44,7 @@ app.post('/reserve', (req, res) => {
         text: `Vous avez réservé chez COYOKY.
                Date d'arrivée: ${arrival}
                Date de départ: ${departure}
-               Pour plus d'information : 0690 00000`,
+               Pour plus d'information : 06 90 41 03 53`,
     };
 
     
